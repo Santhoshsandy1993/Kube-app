@@ -19,31 +19,30 @@ spec:
           image: santhoshsandy1993/vprofiledb:v1
 #         args:
 #          - "--ignore-db-dir=lost+found"
-          volumeMounts:
+      volumeMounts:
             - mountPath: /var/lib/mysql
               name: vpro-db-data
-          ports:
-           -name: prodb-port
-            containerPort: 3306
-          env:
-           -name: MSQL_ROOT_PASSWORD
-            valueFrom:
+              ports:
+               - name: prodb-port
+              containerPort: 3306
+              env:
+            - name: MSQL_ROOT_PASSWORD
+              valueFrom:
               secretkeyRef:
                 name: app-secret
                 key: db-pass
-
       nodeSelector:
-         zone: ap-south-1a
-        volumes:
-          - name: vpro-db-data
-            awsElasticBlockStore:
+          zone: ap-south-1a
+      volumes:
+           - name: vpro-db-data
+      awsElasticBlockStore:
               volumeID: vol-03538d92c8acc58cd
               fsType: ext4
 
-          initContainers:
-            -name: busybox
-             image: busybox:latest
-            args: ["rm", "-rf", "/var/lib/mysql/lost+found"]
-            volumeMounts:
-               -name: vpo-db-data
-                mountPath: /var/lib/mysql
+      initContainers:
+            - name: busybox
+              image: busybox:latest
+              args: ["rm", "-rf", "/var/lib/mysql/lost+found"]
+      volumeMounts:
+               - name: vpo-db-data
+                 mountPath: /var/lib/mysql
